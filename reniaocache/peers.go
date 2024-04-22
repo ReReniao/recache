@@ -1,6 +1,6 @@
 package reniaocache
 
-import pb "ReniaoCache/reniaocache/geecachepb"
+import pb "ReniaoCache/reniaocache/reniaocachepb"
 
 type PeerPicker interface {
 	PickPeer(key string) (peer PeerGetter, ok bool)

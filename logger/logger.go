@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"ReniaoCache/conf"
 	"github.com/charmbracelet/log"
 	"os"
 	"time"
@@ -15,17 +16,9 @@ func Init() {
 		TimeFormat:      time.Kitchen,
 		Prefix:          "ReniaoCache ",
 	})
-	level := os.Getenv("LogLevel")
-	switch level {
-	case "debug":
+	if conf.AppMode == "debug" {
 		Logger.SetLevel(log.DebugLevel)
-	case "info":
+	} else {
 		Logger.SetLevel(log.InfoLevel)
-	case "warn":
-		Logger.SetLevel(log.WarnLevel)
-	case "error":
-		Logger.SetLevel(log.ErrorLevel)
-	default:
-		Logger.SetLevel(log.DebugLevel)
 	}
 }

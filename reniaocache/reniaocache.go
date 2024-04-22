@@ -1,10 +1,9 @@
 package reniaocache
 
 import (
-	pb "ReniaoCache/reniaocache/geecachepb"
+	pb "ReniaoCache/reniaocache/reniaocachepb"
 	"ReniaoCache/reniaocache/singleflight"
 	"fmt"
-	"log"
 	"sync"
 )
 
@@ -21,10 +20,10 @@ func (f GetterFunc) Get(key string) ([]byte, error) {
 type Group struct {
 	name      string
 	getter    Getter // 用于获取数据库数据
-	mainCache cache
+	mainCache *cache
 	peers     PeerPicker
 	// 使用 singleflight.Group 确保每个key只被请求一次
-	loader *singleflight.Group
+	loader *singleflight.SingleFlight
 }
 
 var (
@@ -35,7 +34,7 @@ var (
 // NewGroup 创建一个新的Group实例
 func NewGroup(name string, cacheBytes int64, getter Getter) *Group {
 	if getter == nil {
-		panic("nil Getter")
+		panic("Group Getter Must be existed!")
 	}
 
 	group := GetGroup(name)
@@ -47,8 +46,8 @@ func NewGroup(name string, cacheBytes int64, getter Getter) *Group {
 	g := &Group{
 		name:      name,
 		getter:    getter,
-		mainCache: cache{cacheBytes: cacheBytes},
-		loader:    &singleflight.Group{},
+		mainCache: newCache(cacheBytes),
+		loader:    &singleflight.SingleFlight{},
 	}
 	groups[name] = g
 	return g
@@ -67,7 +66,7 @@ func (g *Group) Get(key string) (ByteView, error) {
 		return ByteView{}, fmt.Errorf("key is required")
 	}
 	if v, ok := g.mainCache.get(key); ok {
-		log.Println("[GeeCaChe hit]")
+		//log.Logger.Infof("[GeeCaChe hit]")
 		return v, nil
 	}
 	return g.load(key)
@@ -87,7 +86,7 @@ func (g *Group) LoadLocally(key string) (ByteView, error) {
 
 // populateCaChe 将某数据写入缓存
 func (g *Group) populateCache(key string, value ByteView) {
-	g.mainCache.add(key, value)
+	g.mainCache.set(key, value)
 }
 
 // RegisterPeers 注册一个结点选择器以选择远程结点
@@ -106,13 +105,13 @@ func (g *Group) load(key string) (value ByteView, err error) {
 				if value, err = g.getFromPeer(peer, key); err == nil {
 					return value, nil
 				}
-				log.Println("[GeeCache] Failed to get from peer", err)
+				//log.Logger.Infof("[GeeCache] Failed to get from peer %s", err)
 			}
 		}
 		return g.getLocally(key)
 	})
 
-	if err != nil {
+	if err == nil {
 		return viewi.(ByteView), nil
 	}
 	return ByteView{}, err

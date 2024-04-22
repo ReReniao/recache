@@ -1,38 +1,56 @@
 package reniaocache
 
 import (
-	"ReniaoCache/lru"
+	"ReniaoCache/conf"
+	"ReniaoCache/policy"
 	"sync"
 )
 
 type cache struct {
-	mu         sync.Mutex
-	lru        *lru.Cache
+	mu         sync.Mutex // 在 policy.Cache 上层上锁
+	policy     policy.Cache
 	cacheBytes int64
 }
 
-// add 并发安全的add方法
-func (c *cache) add(key string, value ByteView) {
+func newCache(cacheBytes int64) *cache {
+	return &cache{
+		cacheBytes: cacheBytes,
+	}
+}
+
+// set 并发安全 by sync.Mutex
+func (c *cache) set(key string, value ByteView) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	// 延迟初始化
-	if c.lru == nil {
-		c.lru = lru.New(c.cacheBytes, nil)
+	if c.policy == nil {
+		c.policy = policy.New(conf.Policy, c.cacheBytes, nil)
 	}
-	c.lru.Add(key, value)
+	c.policy.Add(key, value)
 }
 
-// get 并发安全的get方法
+// get 并发安全的get方法 by sync.Mutex
 func (c *cache) get(key string) (value ByteView, ok bool) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	if c.lru == nil {
-		return
+	if c.policy == nil {
+		c.policy = policy.New(conf.Policy, c.cacheBytes, nil)
 	}
 
-	if v, ok := c.lru.Get(key); ok {
+	if v, _, ok := c.policy.Get(key); ok {
 		return v.(ByteView), true
 	}
 
-	return
+	return ByteView{}, false
+}
+
+// put 并发安全 by sync.Mutex
+func (c *cache) put(key string, val ByteView) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	if c.policy == nil { // 策略类模式
+		c.policy = policy.New(conf.Policy, c.cacheBytes, nil)
+	}
+	//logger.Logger.Info("cache.put(key, val)")
+	c.policy.Add(key, val)
 }

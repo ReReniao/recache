@@ -1,27 +1,24 @@
 package main
 
 import (
+	"ReniaoCache/conf"
+	"ReniaoCache/db"
+	log "ReniaoCache/logger"
 	"ReniaoCache/reniaocache"
 	"flag"
 	"fmt"
-	"log"
 	"net/http"
 )
-
-// 模拟一个数据库
-var db = map[string]string{
-	"Tom":  "630",
-	"Jack": "589",
-	"Sam":  "567",
-}
 
 func createGroup() *reniaocache.Group {
 	return reniaocache.NewGroup("scores", 2<<10, reniaocache.GetterFunc(
 		func(key string) ([]byte, error) {
-			log.Println("[SlowDB] search key", key)
+			log.Logger.Infof("[SlowDB] search key %s", key)
 			// 从模拟数据库获取数据
-			if v, ok := db[key]; ok {
-				return []byte(v), nil
+			var student db.Student
+			err := db.DB.Model(&student).Where("name = ?", key).First(&student).Error
+			if err == nil {
+				return []byte(student.Score), nil
 			}
 			return nil, fmt.Errorf("%s not exist", key)
 		}))
@@ -31,8 +28,8 @@ func startCacheServer(addr string, addrs []string, gee *reniaocache.Group) {
 	peers := reniaocache.NewHTTPPool(addr)
 	peers.Set(addrs...)
 	gee.RegisterPeers(peers)
-	log.Println("reniaocache is running at", addr)
-	log.Fatal(http.ListenAndServe(addr[7:], peers))
+	log.Logger.Infof("reniaocache is running at %s", addr)
+	log.Logger.Fatal(http.ListenAndServe(addr[7:], peers))
 }
 
 func startAPIServer(apiAddr string, gee *reniaocache.Group) {
@@ -48,18 +45,20 @@ func startAPIServer(apiAddr string, gee *reniaocache.Group) {
 			w.Write(view.ByteSlice())
 
 		}))
-	log.Println("frontend server is running at", apiAddr)
-	log.Fatal(http.ListenAndServe(apiAddr[7:], nil))
+	log.Logger.Infof("frontend server is running at %s", apiAddr)
+	log.Logger.Fatal(http.ListenAndServe(apiAddr[7:], nil))
 
 }
 
 func main() {
+
 	var port int
 	var api bool
 	flag.IntVar(&port, "port", 8001, "reniaocache server port")
 	flag.BoolVar(&api, "api", false, "Start a api server?")
 	flag.Parse()
-
+	log.Init()
+	conf.Init()
 	apiAddr := "http://localhost:9999"
 	addrMap := map[int]string{
 		8001: "http://localhost:8001",

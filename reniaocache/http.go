@@ -2,11 +2,10 @@ package reniaocache
 
 import (
 	"ReniaoCache/reniaocache/consistenthash"
-	pb "ReniaoCache/reniaocache/geecachepb"
+	pb "ReniaoCache/reniaocache/reniaocachepb"
 	"fmt"
 	"google.golang.org/protobuf/proto"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -72,7 +71,7 @@ func NewHTTPPool(self string) *HTTPPool {
 
 // Log 打印 服务名称 和 信息
 func (p *HTTPPool) Log(format string, v ...interface{}) {
-	log.Printf("[Server %s] %s", p.self, fmt.Sprintf(format, v...))
+	//log.Logger.Infof("[Server %s] %s", p.self, fmt.Sprintf(format, v...))
 }
 
 // ServeHTTP 实现HTTP Handler接口
