@@ -2,6 +2,7 @@ package reniaocache
 
 import (
 	"ReniaoCache/conf"
+	log "ReniaoCache/logger"
 	"ReniaoCache/policy"
 	"sync"
 )
@@ -51,6 +52,6 @@ func (c *cache) put(key string, val ByteView) {
 	if c.policy == nil { // 策略类模式
 		c.policy = policy.New(conf.Policy, c.cacheBytes, nil)
 	}
-	//logger.Logger.Info("cache.put(key, val)")
+	log.Logger.Info("cache.put(key, val)")
 	c.policy.Add(key, val)
 }
