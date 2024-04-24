@@ -1,4 +1,4 @@
-package reniaocache
+package service
 
 // ByteView 只读的缓存值
 type ByteView struct {
@@ -10,8 +10,8 @@ func (v ByteView) Len() int {
 	return len(v.b)
 }
 
-// ByteSlice 返回一个副本
-func (v ByteView) ByteSlice() []byte {
+// Bytes 返回一个副本
+func (v ByteView) Bytes() []byte {
 	return cloneBytes(v.b)
 }
 

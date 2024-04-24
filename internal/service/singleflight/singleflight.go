@@ -4,7 +4,7 @@ import (
 	"sync"
 )
 
-type call struct {
+type Call struct {
 	wg  sync.WaitGroup
 	val interface{}
 	err error
@@ -12,14 +12,14 @@ type call struct {
 
 type SingleFlight struct {
 	mu sync.Mutex // 保护 m
-	m  map[string]*call
+	m  map[string]*Call
 }
 
 func (g *SingleFlight) Do(key string, fn func() (interface{}, error)) (interface{}, error) {
 	// 加锁，避免 g.m 被并发读写
 	g.mu.Lock()
 	if g.m == nil {
-		g.m = make(map[string]*call)
+		g.m = make(map[string]*Call)
 	}
 	if c, ok := g.m[key]; ok {
 		// 已有相同请求，释放互斥锁
@@ -30,7 +30,7 @@ func (g *SingleFlight) Do(key string, fn func() (interface{}, error)) (interface
 		c.wg.Wait()
 		return c.val, c.err
 	}
-	c := new(call)
+	c := new(Call)
 	c.wg.Add(1)
 	g.m[key] = c
 	// 请求已经创建，释放锁

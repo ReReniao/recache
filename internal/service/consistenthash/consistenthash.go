@@ -1,7 +1,6 @@
 package consistenthash
 
 import (
-	log "ReniaoCache/logger"
 	"hash/crc32"
 	"sort"
 	"strconv"
@@ -17,9 +16,9 @@ type Map struct {
 	hashMap  map[int]string // 虚拟结点和真实结点的映射表
 }
 
-// New 返回一个 Map 实例;
+// NewMap 返回一个 Map 实例;
 // replicas 虚拟结点倍数； fn 指定哈希算法
-func New(replicas int, fn Hash) *Map {
+func NewMap(replicas int, fn Hash) *Map {
 	// fn 为 nil 采用默认 hash 算法
 	if fn == nil {
 		fn = crc32.ChecksumIEEE
@@ -33,7 +32,7 @@ func New(replicas int, fn Hash) *Map {
 }
 
 // Add 添加 key 到 hash环
-func (m *Map) Add(keys ...string) {
+func (m *Map) AddNode(keys ...string) {
 	for _, key := range keys {
 		for i := 0; i < m.replicas; i++ {
 			hash := int(m.hash([]byte(strconv.Itoa(i) + key)))
@@ -45,7 +44,7 @@ func (m *Map) Add(keys ...string) {
 }
 
 // Get 返回承载 key 对应缓存的真实结点
-func (m *Map) Get(key string) string {
+func (m *Map) GetTruthNode(key string) string {
 	if len(key) == 0 {
 		return ""
 	}
@@ -59,8 +58,8 @@ func (m *Map) Get(key string) string {
 
 	// 取模后得到真实结点的映射
 	realKey := m.hashMap[m.keys[idx%len(m.keys)]]
-	log.Logger.Infof("计算出 key 的 hash: %d, 顺时针选择的节点下标 idx: %d", hash, idx)
-	log.Logger.Infof("选择的真实节点：%s", realKey)
+	//log.Logger.Infof("计算出 key 的 hash: %d, 顺时针选择的节点下标 idx: %d", hash, idx)
+	//log.Logger.Infof("选择的真实节点：%s", realKey)
 
 	return realKey
 }
@@ -82,5 +81,5 @@ func (m *Map) RemovePeer(peer string) {
 			}
 		}
 	}
-	log.Logger.Infof("结点移除成功，缓存被顺位结点继承")
+	//log.Logger.Infof("结点移除成功，缓存被顺位结点继承")
 }

@@ -1,51 +1,56 @@
-package reniaocache
+package service
 
 import (
-	log "ReniaoCache/logger"
-	"ReniaoCache/reniaocache/singleflight"
 	"fmt"
+	log "recache/internal/middleware/logger"
+	"recache/internal/service/singleflight"
 	"sync"
 )
 
-type Getter interface {
-	Get(key string) ([]byte, error)
-}
-
-// GetterFunc 接口回调函数
-type GetterFunc func(key string) ([]byte, error)
-
-func (f GetterFunc) Get(key string) ([]byte, error) {
-	return f(key)
-}
+const (
+	apiServer  = "http://127.0.0.1:9999"
+	bindServer = "http://127.0.0.1:8001"
+)
 
 type Group struct {
 	name      string
-	getter    Getter     // 用于获取数据库数据
-	mainCache *cache     // 缓存实例接口
-	peers     PeerPicker // 缓存服务接口
+	retriever Retriever // 用于获取数据库数据
+	mainCache *cache    // 缓存实例接口
+	locator   Picker    // 缓存服务接口
 	// 使用 singleflight.Group 确保每个key只被请求一次
-	loader *singleflight.SingleFlight
+	flight *singleflight.SingleFlight
 }
 
 var (
 	mu     sync.RWMutex
-	Groups = make(map[string]*Group)
+	groups = make(map[string]*Group)
 )
 
+// 新 Group 的 Picker 没有注册，因此您可以为其指定 peer Picker
+func (g *Group) RegisterPickerForGroup(p Picker) {
+	if g.locator != nil {
+		panic("group has been registered node locator")
+	}
+	g.locator = p
+}
+
 // NewGroup 创建一个新的Group实例
-func NewGroup(name string, cacheBytes int64, getter Getter) *Group {
-	if getter == nil {
-		panic("Group Getter Must be existed!")
+func NewGroup(name string, strategy string, cacheBytes int64, retriever Retriever) *Group {
+	if retriever == nil {
+		panic("Group fetcher Must be existed!")
 	}
 	g := &Group{
 		name:      name,
-		getter:    getter,
-		mainCache: newCache(cacheBytes),
-		loader:    &singleflight.SingleFlight{},
+		retriever: retriever,
+		mainCache: newCache(strategy, cacheBytes),
+		flight:    &singleflight.SingleFlight{},
+	}
+	if _, ok := groups[name]; ok {
+		return groups[name]
 	}
 	mu.Lock()
-	Groups[name] = g
-	log.Logger.Infof(Groups[name].name)
+	groups[name] = g
+	log.Logger.Infof(groups[name].name)
 	mu.Unlock()
 	return g
 }
@@ -53,19 +58,18 @@ func NewGroup(name string, cacheBytes int64, getter Getter) *Group {
 // GetGroup 返回之间创建的命名组；如果返回nil，则表示没有该group
 func GetGroup(name string) *Group {
 	mu.RLock()
-	g := Groups[name]
-	mu.RUnlock()
-	return g
+	defer mu.RUnlock()
+	return groups[name]
+
 }
 
-func DestroryGroup(name string) {
-	g := Groups[name]
+// TODO
+func DestroyGroup(name string) {
+	mu.Lock()
+	defer mu.Unlock()
+	g := groups[name]
 	if g != nil {
-		svr := g.peers.(*Server)
-		// 停止服务
-		svr.Stop()
-		delete(Groups, name)
-		log.Logger.Infof("Destrory cache [%s %s]", name, svr.Addr)
+		delete(groups, name)
 	}
 }
 
@@ -82,7 +86,7 @@ func (g *Group) Get(key string) (ByteView, error) {
 
 func (g *Group) LoadLocally(key string) (ByteView, error) {
 	// 从DB源获取值
-	bytes, err := g.getter.Get(key)
+	bytes, err := g.retriever.retrieve(key)
 	if err != nil {
 		return ByteView{}, err
 	}
@@ -98,19 +102,19 @@ func (g *Group) populateCache(key string, value ByteView) {
 }
 
 // RegisterPeers 为 Group 注册 server
-func (g *Group) RegisterPeers(peers PeerPicker) {
-	if g.peers != nil {
+func (g *Group) RegisterPeers(locator Picker) {
+	if g.locator != nil {
 		panic("RegisterPeerPicker called more than once")
 	}
-	g.peers = peers
+	g.locator = locator
 }
 
 func (g *Group) load(key string) (value ByteView, err error) {
 	// 本地和远程的相同key请求都只请求一次
-	viewi, err := g.loader.Do(key, func() (interface{}, error) {
-		if g.peers != nil {
-			if peer, ok := g.peers.PickPeer(key); ok {
-				if value, err = g.getFromPeer(peer, key); err == nil {
+	view, err := g.flight.Do(key, func() (interface{}, error) {
+		if g.locator != nil {
+			if fetcher, ok := g.locator.Pick(key); ok {
+				if value, err = g.getFromPeer(fetcher, key); err == nil {
 					return value, nil
 				}
 				log.Logger.Infof("[GeeCache] Failed to get from peer %s", err)
@@ -120,7 +124,7 @@ func (g *Group) load(key string) (value ByteView, err error) {
 	})
 
 	if err == nil {
-		return viewi.(ByteView), nil
+		return view.(ByteView), nil
 	}
 	return ByteView{}, err
 }
@@ -130,7 +134,7 @@ func (g *Group) getLocally(key string) (ByteView, error) {
 }
 
 // 向其他结点请求
-func (g *Group) getFromPeer(peer PeerGetter, key string) (ByteView, error) {
+func (g *Group) getFromPeer(peer Fetcher, key string) (ByteView, error) {
 
 	bytes, err := peer.Fetch(g.name, key)
 	if err != nil {
