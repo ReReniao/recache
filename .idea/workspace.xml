@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c680e257-fd25-45c3-85e5-e974c26df24e" name="更改" comment="v2" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Go File" />
+      </list>
+    </option>
+  </component>
+  <component name="GOROOT" url="file://$USER_HOME$/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.21.5.windows-amd64" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="2fXb1Y2PWCPukd6g7KpdDDlOfuQ" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
+    &quot;Go 构建.go build ReniaoCache.executor&quot;: &quot;Run&quot;,
+    &quot;Go 构建.go build ReniaoCache/grpc/server.executor&quot;: &quot;Run&quot;,
+    &quot;Go 构建.go build recache/cmd/grpc.executor&quot;: &quot;Run&quot;,
+    &quot;Go 构建.go build recache/cmd/http.executor&quot;: &quot;Run&quot;,
+    &quot;Go 构建.go build recache/internal/middleware/etcd/cluster.executor&quot;: &quot;Run&quot;,
+    &quot;Go 构建.go build recache/test.executor&quot;: &quot;Run&quot;,
+    &quot;Go 测试.recache/internal/service/cachepurge/fifo 中的 Test_fifoCache_Get.executor&quot;: &quot;Run&quot;,
+    &quot;Go 测试.recache/internal/service/cachepurge/lfu 中的 TestPriorityQueue_Get.executor&quot;: &quot;Run&quot;,
+    &quot;Go 测试.recache/internal/service/cachepurge/lfu 中的 TestPriorityQueue_Remove.executor&quot;: &quot;Run&quot;,
+    &quot;Go 测试.recache/internal/service/cachepurge/lfu 中的 Test_priorityqueue_Pop.executor&quot;: &quot;Run&quot;,
+    &quot;Go 测试.recache/internal/service/cachepurge/lru 中的 TestGet.executor&quot;: &quot;Run&quot;,
+    &quot;Go 测试.recache/internal/service/cachepurge/lru 中的 TestRemoveoldest.executor&quot;: &quot;Run&quot;,
+    &quot;Go 测试.recache/internal/service/consistenthash 中的 TestHashing.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;v2&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Administrator/GolandProjects/ReniaoCache/internal/middleware/etcd&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
+    ]
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Administrator\GolandProjects\ReniaoCache\internal\middleware\etcd" />
+      <recent name="C:\Users\Administrator\GolandProjects\ReniaoCache\internal\server\grpc" />
+      <recent name="C:\Users\Administrator\GolandProjects\ReniaoCache\script" />
+      <recent name="C:\Users\Administrator\GolandProjects\ReniaoCache" />
+      <recent name="C:\Users\Administrator\GolandProjects\ReniaoCache\reniaocache\reniaocachepb" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Administrator\GolandProjects\ReniaoCache\internal\service\cachepurge" />
+      <recent name="C:\Users\Administrator\GolandProjects\ReniaoCache\internal\service" />
+      <recent name="C:\Users\Administrator\GolandProjects\ReniaoCache\internal\service\singleflight" />
+      <recent name="C:\Users\Administrator\GolandProjects\ReniaoCache\internal\service\consistenthash" />
+      <recent name="C:\Users\Administrator\GolandProjects\ReniaoCache\internal\service\cachepurge\interfaces" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Go 构建.go build recache/cmd/grpc">
+    <configuration name="go build recache/cmd/grpc" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="ReniaoCache" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="recache/cmd/grpc" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/cmd/grpc/main.go" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build recache/cmd/http" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="ReniaoCache" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="recache/cmd/http" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/cmd/http/main.go" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build recache/internal/middleware/etcd/cluster" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="ReniaoCache" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="recache/internal/middleware/etcd/cluster" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/internal/middleware/etcd/cluster/client_put.go" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build recache/test" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="ReniaoCache" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="recache/test" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/test/grpcclient.go" />
+      <method v="2" />
+    </configuration>
+    <configuration name="recache/internal/service/consistenthash 中的 TestHashing" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="ReniaoCache" />
+      <working_directory value="$PROJECT_DIR$/internal/service/consistenthash" />
+      <root_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="recache/internal/service/consistenthash" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestHashing\E$" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go 构建.go build recache/cmd/grpc" />
+        <item itemvalue="Go 构建.go build recache/test" />
+        <item itemvalue="Go 构建.go build recache/internal/middleware/etcd/cluster" />
+        <item itemvalue="Go 构建.go build recache/cmd/http" />
+        <item itemvalue="Go 测试.recache/internal/service/consistenthash 中的 TestHashing" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-gosdk-467a64f6063b-ee0e143f3e2b-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-233.11799.286" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="v1" />
+    <MESSAGE value="v2" />
+    <option name="LAST_COMMIT_MESSAGE" value="v2" />
+  </component>
+  <component name="VgoProject">
+    <settings-migrated>true</settings-migrated>
+  </component>
+</project>

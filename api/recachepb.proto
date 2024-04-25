@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package api;
+
+option go_package = ".";
+
+message GetRequest {
+  string group = 1;
+  string key = 2;
+}
+
+message GetResponse {
+  bytes value = 1;
+}
+
+// 定义服务
+service ReCache {
+  rpc Get(GetRequest) returns (GetResponse);
+}
+
+
