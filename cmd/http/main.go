@@ -2,40 +2,39 @@ package main
 
 import (
 	"flag"
-	"recache/conf"
-	"recache/internal/middleware/logger"
-	httpserver "recache/internal/server/http"
-	"recache/internal/service"
+	"fmt"
+	httpserver "recache/internal/service"
 )
 
 var (
-	port = flag.Int("port", 8001, "service node default port")
+	port = flag.Int("port", 9999, "service node default port")
 	api  = flag.Bool("api", false, "Start a api server?")
 	// assuming that the api server and http://127.0.0.1:8001 are running on the same physical machine
-	apiServerAddr = "http://127.0.0.1:9999"
+	apiServerAddr1 = "http://127.0.0.1:8000"
+	apiServerAddr2 = "http://127.0.0.1:8001"
 )
 
 func main() {
 	// proposal: you can use viper
-	conf.Init()
 	flag.Parse()
-	logger.Init()
 	/* if you have a configuration center, both api client and http server configurations can be pulled from the configuration center */
 	serverAddrMap := map[int]string{
-		8001: "http://127.0.0.1:8001",
-		8002: "http://127.0.0.1:8002",
-		8003: "http://127.0.0.1:8003",
+		9999:  "http://127.0.0.1:9999",
+		10000: "http://127.0.0.1:10000",
+		10001: "http://127.0.0.1:10001",
 	}
 	var serverAddrs []string
 	for _, v := range serverAddrMap {
 		serverAddrs = append(serverAddrs, v)
 	}
 
-	recache := service.NewGroupInstance("scores")
+	gm := httpserver.NewGroupManager([]string{"scores", "website"}, fmt.Sprintf("127.0.0.1:%d", *port))
 	//  start http api server for client load balancing
 	if *api {
-		go httpserver.StartHTTPAPIServer(apiServerAddr, recache)
+		go httpserver.StartHTTPAPIServer(apiServerAddr1, gm["scores"])
+		go httpserver.StartHTTPAPIServer(apiServerAddr2, gm["website"])
 	}
 	// start http server to provide caching service
-	httpserver.StartHTTPCacheServer(serverAddrMap[*port], []string(serverAddrs), recache)
+	httpserver.StartHTTPCacheServer(serverAddrMap[*port], []string(serverAddrs), gm["scores"])
+	httpserver.StartHTTPCacheServer(serverAddrMap[*port], []string(serverAddrs), gm["website"])
 }

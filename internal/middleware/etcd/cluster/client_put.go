@@ -3,10 +3,10 @@ package main
 import (
 	"context"
 	"fmt"
+	"recache/utils/logger"
 	"time"
 
 	clientv3 "go.etcd.io/etcd/client/v3"
-	"recache/internal/middleware/logger"
 )
 
 func main() {
@@ -30,9 +30,9 @@ func main() {
 
 	_, err = cli.Put(ctx, "clusters/localhost:9999", "localhost:9999")
 	if err != nil {
-		logger.Logger.Error("put recache service to etcd failed")
+		logger.LogrusObj.Error("put recachepb service to etcd failed")
 		return
 	}
 
-	fmt.Println("put recache service to etcd success!")
+	fmt.Println("put recachepb service to etcd success!")
 }

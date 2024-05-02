@@ -1,11 +1,13 @@
 package service
 
 import (
-	"recache/conf"
-	"recache/internal/service/cachepurge"
-	"recache/internal/service/cachepurge/interfaces"
+	"recache/internal/service/policy"
+	"recache/internal/service/policy/interfaces"
+	"recache/utils/logger"
 	"sync"
 )
+
+// cache 模块负责提供对lru模块的并发控制
 
 type cache struct {
 	mu         sync.Mutex // 在  interfaces.CacheStrategy 上层上锁
@@ -14,16 +16,12 @@ type cache struct {
 }
 
 func newCache(strategy string, cacheBytes int64) *cache {
-	// 默认使用 lru 作为缓存淘汰策略
-	if strategy == "" {
-		strategy = "lru"
+	onEvicted := func(key string, val interfaces.Value) {
+		logger.LogrusObj.Infof("缓存条目 [%s:%s] 被淘汰", key, val)
 	}
-	// 默认缓存最大体积 2<<10 bytes
-	if cacheBytes == 0 {
-		cacheBytes = 2 << 10
-	}
+
 	return &cache{
-		strategy:   cachepurge.New(strategy, cacheBytes, nil),
+		strategy:   policy.New(strategy, cacheBytes, onEvicted),
 		cacheBytes: cacheBytes,
 	}
 }
@@ -33,10 +31,6 @@ func newCache(strategy string, cacheBytes int64) *cache {
 func (c *cache) set(key string, value ByteView) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	// 延迟初始化
-	if c.strategy == nil {
-		c.strategy = cachepurge.New(conf.Policy, c.cacheBytes, nil)
-	}
 	c.strategy.Put(key, value)
 }
 
@@ -44,9 +38,6 @@ func (c *cache) set(key string, value ByteView) {
 func (c *cache) get(key string) (value ByteView, ok bool) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	if c.strategy == nil {
-		c.strategy = cachepurge.New(conf.Policy, c.cacheBytes, nil)
-	}
 
 	if v, _, ok := c.strategy.Get(key); ok {
 		return v.(ByteView), true
@@ -59,9 +50,6 @@ func (c *cache) get(key string) (value ByteView, ok bool) {
 func (c *cache) put(key string, val ByteView) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	if c.strategy == nil { // 策略类模式
-		c.strategy = cachepurge.New(conf.Policy, c.cacheBytes, nil)
-	}
-	//log.Logger.Info("cache.put(key, val)")
+	logger.LogrusObj.Infof("存入数据库之后压入缓存, (key, value)=(%s, %s)", key, val)
 	c.strategy.Put(key, val)
 }

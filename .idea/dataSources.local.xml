@@ -11,10 +11,7 @@
       <user-name>root</user-name>
       <schema-mapping>
         <introspection-scope>
-          <node kind="schema">
-            <name qname="@" />
-            <name qname="cache_slow_db" />
-          </node>
+          <node kind="schema" qname="kv" />
         </introspection-scope>
       </schema-mapping>
     </data-source>

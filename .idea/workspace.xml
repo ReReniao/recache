@@ -4,7 +4,64 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c680e257-fd25-45c3-85e5-e974c26df24e" name="更改" comment="v2" />
+    <list default="true" id="c680e257-fd25-45c3-85e5-e974c26df24e" name="更改" comment="v2">
+      <change afterPath="$PROJECT_DIR$/config/config.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/service/http_helper.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/script/test/grpc/grpc_client.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/logger/logger.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/2eac2581-9a3b-42d7-9df3-cebc178df2f6.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/2eac2581-9a3b-42d7-9df3-cebc178df2f6.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/recachepb.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/recachepb/recachepb.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/recachepb.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/recachepb/recachepb.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/recachepb_grpc.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/recachepb/recachepb_grpc.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sql/init_db.sql" beforeDir="false" afterPath="$PROJECT_DIR$/assets/sql/init_db.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/grpc/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/grpc/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/http/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/http/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/conf/config.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/conf/config.ini" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/middleware/etcd/cluster/client_put.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/middleware/etcd/cluster/client_put.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/middleware/etcd/cluster/infra1.etcd/member/snap/db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/middleware/etcd/cluster/infra1.etcd/member/wal/0000000000000000-0000000000000000.wal" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/middleware/etcd/cluster/infra2.etcd/member/snap/db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/middleware/etcd/cluster/infra2.etcd/member/wal/0000000000000000-0000000000000000.wal" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/middleware/etcd/cluster/infra3.etcd/member/snap/db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/middleware/etcd/cluster/infra3.etcd/member/wal/0000000000000000-0000000000000000.wal" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/middleware/etcd/discovery.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/middleware/etcd/registry.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/middleware/logger/logger.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/middleware/mysql/db/db.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/server/grpc/client.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/server/grpc/server.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/server/grpc/start.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/server/http/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/http_fetcher.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/server/http/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/http_pick.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/server/http/start.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/service/ability.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/interface.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/service/cache.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/cache.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/service/cachepurge/fifo/fifo.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/policy/fifo/fifo.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/service/cachepurge/fifo/fifo_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/policy/fifo/fifo_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/service/cachepurge/interfaces/strategy.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/policy/interfaces/strategy.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/service/cachepurge/lfu/lfu.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/policy/lfu/lfu.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/service/cachepurge/lfu/lfu_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/policy/lfu/lfu_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/service/cachepurge/lfu/priorityqueue.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/policy/lfu/priorityqueue.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/service/cachepurge/lfu/priorityqueue_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/policy/lfu/priorityqueue_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/service/cachepurge/lru/lru.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/policy/lru/lru.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/service/cachepurge/lru/lru_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/policy/lru/lru_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/service/cachepurge/purge.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/policy/purge.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/service/client.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/service/consistenthash/consistenthash.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/consistenthash/consistenthash.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/service/group.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/group.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/service/recache.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/recache.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/service/server.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/service/singleflight/singleflight.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/singleflight/singleflight.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/.env" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/grpcclient.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/utils.go" beforeDir="false" afterPath="$PROJECT_DIR$/utils/validate/validate.go" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -58,7 +115,7 @@
     &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;v2&quot;,
     &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Administrator/GolandProjects/ReniaoCache/internal/middleware/etcd&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Administrator/GolandProjects/ReniaoCache/script/test&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;
@@ -71,18 +128,18 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Administrator\GolandProjects\ReniaoCache\script\test" />
       <recent name="C:\Users\Administrator\GolandProjects\ReniaoCache\internal\middleware\etcd" />
       <recent name="C:\Users\Administrator\GolandProjects\ReniaoCache\internal\server\grpc" />
       <recent name="C:\Users\Administrator\GolandProjects\ReniaoCache\script" />
       <recent name="C:\Users\Administrator\GolandProjects\ReniaoCache" />
-      <recent name="C:\Users\Administrator\GolandProjects\ReniaoCache\reniaocache\reniaocachepb" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Administrator\GolandProjects\ReniaoCache\internal\service\cachepurge" />
+      <recent name="C:\Users\Administrator\GolandProjects\ReniaoCache\internal\pkg\student" />
+      <recent name="C:\Users\Administrator\GolandProjects\ReniaoCache\api\recache" />
+      <recent name="C:\Users\Administrator\GolandProjects\ReniaoCache\script\test\grpc" />
+      <recent name="C:\Users\Administrator\GolandProjects\ReniaoCache\script" />
       <recent name="C:\Users\Administrator\GolandProjects\ReniaoCache\internal\service" />
-      <recent name="C:\Users\Administrator\GolandProjects\ReniaoCache\internal\service\singleflight" />
-      <recent name="C:\Users\Administrator\GolandProjects\ReniaoCache\internal\service\consistenthash" />
-      <recent name="C:\Users\Administrator\GolandProjects\ReniaoCache\internal\service\cachepurge\interfaces" />
     </key>
   </component>
   <component name="RunManager" selected="Go 构建.go build recache/cmd/grpc">

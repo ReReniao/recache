@@ -1,37 +1,35 @@
 package service
 
 import (
+	"errors"
 	"fmt"
-	log "recache/internal/middleware/logger"
+	"gorm.io/gorm"
 	"recache/internal/service/singleflight"
+	"recache/utils/logger"
 	"sync"
+	"time"
 )
 
-const (
-	apiServer  = "http://127.0.0.1:9999"
-	bindServer = "http://127.0.0.1:8001"
+var (
+	mu           sync.RWMutex
+	GroupManager = make(map[string]*Group)
 )
 
 type Group struct {
 	name      string
 	retriever Retriever // 用于获取数据库数据
 	mainCache *cache    // 缓存实例接口
-	locator   Picker    // 缓存服务接口
+	server    Picker    // 缓存服务接口
 	// 使用 singleflight.Group 确保每个key只被请求一次
 	flight *singleflight.SingleFlight
 }
 
-var (
-	mu     sync.RWMutex
-	groups = make(map[string]*Group)
-)
-
 // 新 Group 的 Picker 没有注册，因此您可以为其指定 peer Picker
-func (g *Group) RegisterPickerForGroup(p Picker) {
-	if g.locator != nil {
+func (g *Group) RegisterServer(p Picker) {
+	if g.server != nil {
 		panic("group has been registered node locator")
 	}
-	g.locator = p
+	g.server = p
 }
 
 // NewGroup 创建一个新的Group实例
@@ -43,14 +41,15 @@ func NewGroup(name string, strategy string, cacheBytes int64, retriever Retrieve
 		name:      name,
 		retriever: retriever,
 		mainCache: newCache(strategy, cacheBytes),
-		flight:    &singleflight.SingleFlight{},
+		flight:    singleflight.NewSingleFlight(10 * time.Second),
 	}
-	if _, ok := groups[name]; ok {
-		return groups[name]
+	if _, ok := GroupManager[name]; ok {
+		return GroupManager[name]
 	}
+
 	mu.Lock()
-	groups[name] = g
-	log.Logger.Infof(groups[name].name)
+	GroupManager[name] = g
+	logger.LogrusObj.Infof(GroupManager[name].name)
 	mu.Unlock()
 	return g
 }
@@ -59,18 +58,8 @@ func NewGroup(name string, strategy string, cacheBytes int64, retriever Retrieve
 func GetGroup(name string) *Group {
 	mu.RLock()
 	defer mu.RUnlock()
-	return groups[name]
+	return GroupManager[name]
 
-}
-
-// TODO
-func DestroyGroup(name string) {
-	mu.Lock()
-	defer mu.Unlock()
-	g := groups[name]
-	if g != nil {
-		delete(groups, name)
-	}
 }
 
 func (g *Group) Get(key string) (ByteView, error) {
@@ -78,46 +67,30 @@ func (g *Group) Get(key string) (ByteView, error) {
 		return ByteView{}, fmt.Errorf("key must be required")
 	}
 	if v, ok := g.mainCache.get(key); ok {
-		log.Logger.Infof("[GeeCaChe hit]")
+		logger.LogrusObj.Infof("[ReCaChe hit]")
 		return v, nil
 	}
 	return g.load(key)
 }
 
-func (g *Group) LoadLocally(key string) (ByteView, error) {
-	// 从DB源获取值
-	bytes, err := g.retriever.retrieve(key)
-	if err != nil {
-		return ByteView{}, err
-	}
-	value := ByteView{b: bytes}
-	// 更新缓存
-	g.populateCache(key, value)
-	return value, nil
-}
-
-// populateCaChe 将某数据写入缓存
-func (g *Group) populateCache(key string, value ByteView) {
-	g.mainCache.set(key, value)
-}
-
 // RegisterPeers 为 Group 注册 server
-func (g *Group) RegisterPeers(locator Picker) {
-	if g.locator != nil {
+func (g *Group) RegisterPeers(server Picker) {
+	if g.server != nil {
 		panic("RegisterPeerPicker called more than once")
 	}
-	g.locator = locator
+	g.server = server
 }
 
-func (g *Group) load(key string) (value ByteView, err error) {
+func (g *Group) load(key string) (ByteView, error) {
 	// 本地和远程的相同key请求都只请求一次
 	view, err := g.flight.Do(key, func() (interface{}, error) {
-		if g.locator != nil {
-			if fetcher, ok := g.locator.Pick(key); ok {
-				if value, err = g.getFromPeer(fetcher, key); err == nil {
-					return value, nil
+		if g.server != nil {
+			if fetcher, ok := g.server.Pick(key); ok {
+				bytes, err := fetcher.Fetch(g.name, key)
+				if err == nil {
+					return ByteView{b: cloneBytes(bytes)}, nil
 				}
-				log.Logger.Infof("[GeeCache] Failed to get from peer %s", err)
+				logger.LogrusObj.Infof("[GeeCache] Failed to get from peer %s", err.Error())
 			}
 		}
 		return g.getLocally(key)
@@ -130,15 +103,22 @@ func (g *Group) load(key string) (value ByteView, err error) {
 }
 
 func (g *Group) getLocally(key string) (ByteView, error) {
-	return g.LoadLocally(key)
-}
-
-// 向其他结点请求
-func (g *Group) getFromPeer(peer Fetcher, key string) (ByteView, error) {
-
-	bytes, err := peer.Fetch(g.name, key)
+	// 从DB源获取值
+	bytes, err := g.retriever.retrieve(key)
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			logger.LogrusObj.Warnf("对于不存在的 key, 为了防止缓存穿透, 先存入缓存中并设置合理过期时间")
+			g.mainCache.put(key, ByteView{})
+		}
 		return ByteView{}, err
 	}
-	return ByteView{b: bytes}, nil
+	value := ByteView{b: cloneBytes(bytes)}
+	// 更新缓存
+	g.populateCache(key, value)
+	return value, nil
+}
+
+// populateCaChe 将某数据写入缓存
+func (g *Group) populateCache(key string, value ByteView) {
+	g.mainCache.set(key, value)
 }

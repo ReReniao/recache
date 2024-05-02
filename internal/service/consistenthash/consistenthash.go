@@ -34,6 +34,7 @@ func NewMap(replicas int, fn Hash) *Map {
 // Add 添加 key 到 hash环
 func (m *Map) AddNode(keys ...string) {
 	for _, key := range keys {
+		// 映射虚拟结点
 		for i := 0; i < m.replicas; i++ {
 			hash := int(m.hash([]byte(strconv.Itoa(i) + key)))
 			m.keys = append(m.keys, hash)
