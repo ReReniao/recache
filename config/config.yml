@@ -1,0 +1,37 @@
+mysql:
+    host: localhost
+    port: 3306
+    database: kv
+    username: root
+    password: xmhcp1472580369
+    charset: utf8mb4
+
+etcd:
+    address: 
+        - localhost:2379
+    ttl: 5                   # second
+
+services:
+    gateway:
+        name: gateway
+        loadBalance: true
+        addr:
+            - localhost:10005
+    student:
+        name: student
+        loadBalance: false
+        addr: 
+            - localhost:10006
+    recache:
+        name: ReCache
+        addr:
+            - localhost:9999
+            - localhost:10000
+            - localhost:10001
+        ttl: 30               # second
+
+domain:
+    student:
+        name: student
+    groupcache:
+        name: ReCache
